@@ -19,6 +19,10 @@ const invitelink = 'https://discordapp.com/oauth2/authorize?client_id=' + settin
 // discord bot
 client.on('ready', function () {
 	console.log("Ready");
+    client.user.setPresence({
+        status: 'invisible'
+    });
+    
 	initPubSub();
 });
 
