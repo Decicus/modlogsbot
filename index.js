@@ -268,7 +268,7 @@ function initPubSub(){
 					var listenersForThisDiscordChannel = discordChannelId2Listeners[listener.discord.channel_id];
 					if(listenersForThisDiscordChannel.length > 1) text += " in channel "+listener.twitch.channel_name;
 					if(action.moderation_action == "timeout" || action.moderation_action == "ban") {
-						text += "\nSee https://logs.decic.us/api/messages?plain&limit=1000&channel="+listener.twitch.channel_name+"&user="+action.args[0];
+						text += "\nSee https://logs.decic.us/api/messages?plain&limit=50&channel="+listener.twitch.channel_name+"&user="+action.args[0];
 					}
 					client.channels.find("id", listener.discord.channel_id).sendMessage(text);
 				}
