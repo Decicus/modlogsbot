@@ -12,9 +12,8 @@ var client = new Discord.Client({
 	autoReconnect: true
 });
 
-
-
 const invitelink = 'https://discordapp.com/oauth2/authorize?client_id=' + settings.discord.client_id + '&scope=bot&permissions=3072';
+const modActions = ["timeout", "ban", "untimeout", "unban"];
 
 // discord bot
 client.on('ready', function () {
@@ -33,6 +32,7 @@ client.on('message', function (message) {
 				let cmd = words[0];
 				if (commands[cmd]) {
 					words.shift();
+					console.log("Received command: " + message.cleanContent);
 					commands[cmd](message, words);
 				}
 			}
@@ -86,7 +86,7 @@ var commands = {
         sendReply(message, "command prefix: " + settings.discord.prefix + " - commands: " + Object.keys(commands).join(', '));
     },
     invite: function(message, words) {
-        sendReply(message, invitelink);
+        sendReply(message, "Bot invite link: " + invitelink + " - make sure user `" + settings.twitch.mod.name + "` is modded in the target channel");
     },
 	listen: function(message, words) {
 		if(words.length == 1) {
@@ -267,8 +267,8 @@ function initPubSub(){
 					var text = action.created_by+" used command `/"+action.moderation_action+(action.args?" "+action.args.join(" "):"")+"`";
 					var listenersForThisDiscordChannel = discordChannelId2Listeners[listener.discord.channel_id];
 					if(listenersForThisDiscordChannel.length > 1) text += " in channel "+listener.twitch.channel_name;
-					if(action.moderation_action == "timeout" || action.moderation_action == "ban") {
-						text += "\nSee https://logs.decic.us/api/messages?plain&limit=50&channel="+listener.twitch.channel_name+"&user="+action.args[0];
+					if(modActions.includes(action.moderation_action)) {
+						text += "\nSee <https://logs.decic.us/api/messages?plain&limit=50&channel="+listener.twitch.channel_name+"&user="+action.args[0] +">";
 					}
 					client.channels.find("id", listener.discord.channel_id).sendMessage(text);
 				}
